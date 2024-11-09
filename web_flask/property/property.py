@@ -40,7 +40,7 @@ def property_list():
     total_properties = storage.count(Property, property_type)  # Assuming `count()` is defined in your storage model
     if per_page > total_properties:
         per_page = total_properties
-    print(total_properties)
+    
     total_pages = (total_properties + per_page - 1) // per_page  # Total pages required
 
 
@@ -88,3 +88,12 @@ def page_generation():
     return jsonify({
         "properties": property_list
         }) 
+
+
+@app_views_property.route("/property_types")
+def property_types():
+
+
+    Number_per_type ={"apartment": storage.count(Property, "apartment"), "villa": storage.count(Property, "villa"), 
+                      "studio": storage.count(Property, "studio"), "house":storage.count(Property, "house") }
+    return render_template('property-type.html', Number_per_type=Number_per_type)
