@@ -111,6 +111,32 @@ class DBStorage:
             return self.__session.query(Property_image).filter(Property_image.property_id == property_id).all()
         
         return self.__session.query(Property_image).filter(Property_image.property_id == property_id,  Property_image.image_type == image_type).first()
+    
+ 
+    """ def get_countries_with_cities(self):
+        #Returns a dictionary of countries with their respective cities from the Property table.
+        results = self.__session.query(Property.country, Property.city).distinct().all()
+    
+        # Organize results into a dictionary {country: [city1, city2, ...]}
+        countries_with_cities = {}
+        for country, city in results:
+            if country not in countries_with_cities:
+                countries_with_cities[country] = set()  # Use a set to avoid duplicate cities
+            countries_with_cities[country].add(city)
+        
+        # Convert each set of cities to a list for easier JSON serialization if needed
+        return {country: list(cities) for country, cities in countries_with_cities.items()}"""
+
+    def get_countries(self):
+        # Fetch distinct countries
+        countries = self.__session.query(Property.country).distinct().all()
+        countries_list = [country[0] for country in countries]
+        return countries_list
+    
+
+    def get_cities(self, country):
+        # Fetch distinct cities for the given country from the database
+        return self.__session.query(Property.city).filter(Property.country == country).distinct().all()
 
 
     def get_property_by_id(self, property_id):

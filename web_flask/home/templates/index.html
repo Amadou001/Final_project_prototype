@@ -462,18 +462,25 @@
             <div class="container">
                 <div class="row">
                   <div class="col-sm">
-                    <input type="text" class="form-control border-0 py-3" id="size" placeholder="Country">
+                    <select class="form-select border-0 py-3" id="country_search">
+                        <option selected disabled>Select a country</option>
+                        {% for country in countries %}
+                        <option value="{{ country }}">{{ country }}</option>
+                        {% endfor %}
+                    </select>
                   </div>
                   <div class="col-sm">
-                    <input type="text" class="form-control border-0 py-3" placeholder="City">
+                    <select class="form-select border-0 py-3" id="city_search">
+                        <option selected disabled>Select a city</option>
+                    </select>
                   </div>
                   <div class="col-sm">
                     <select class="form-select border-0 py-3">
                         <option selected>Property Type</option>
-                        <option value="1">apartment</option>
-                        <option value="2">house</option>
-                        <option value="3">studio</option>
-                        <option value="4">villa</option>
+                        <option value="apartment">apartment</option>
+                        <option value="house">house</option>
+                        <option value="studio">studio</option>
+                        <option value="villa">villa</option>
                     </select>
                   </div>
                   <div class="col-sm">
@@ -902,7 +909,33 @@
 
         <!-- Back to Top -->
         <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
-    </div>    
+    </div>  
+
+    <script>
+        document.getElementById('country_search').addEventListener('change', async function() {
+            const country = this.value;  // Get the selected country
+            const citySelect = document.getElementById('city_search');
+            
+            // Clear previous cities
+            citySelect.innerHTML = '<option selected disabled>Select a city</option>';
+        
+            if (country) {
+                // Fetch cities based on the selected country
+                const response = await fetch(`/roofmarket/get_cities/${country}`);
+                const cities = await response.json();
+        
+                // Populate the city dropdown with the retrieved cities
+                cities.forEach(city => {
+                    const option = document.createElement('option');
+                    option.value = city;
+                    option.textContent = city;
+                    citySelect.appendChild(option);
+                });
+            }
+        });
+        </script>
+        
+
     
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>

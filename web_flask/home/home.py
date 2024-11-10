@@ -36,5 +36,16 @@ def home():
 
     Number_per_type ={"apartment": storage.count(Property, "apartment"), "villa": storage.count(Property, "villa"), 
                       "studio": storage.count(Property, "studio"), "house":storage.count(Property, "house") }
+    countries = storage.get_countries()
+    return render_template("index.html", properties=property_list, Number_per_type=Number_per_type, countries=countries)
 
-    return render_template("index.html", properties=property_list, Number_per_type=Number_per_type)
+
+
+@app_views_home.route("/get_cities/<country>")
+def get_cities(country):
+    # Fetch distinct cities for the given country from the database
+    cities = storage.get_cities(country)
+    # Flatten the list of tuples into a simple list of cities
+    cities_list = [city[0] for city in cities]
+    print(cities_list)
+    return jsonify(cities_list)
