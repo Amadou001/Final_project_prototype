@@ -486,6 +486,7 @@
                   <div class="col-sm">
                     <input type="text" class="form-control border-0 py-3" placeholder="Price Range" id="priceRangeInput" readonly data-bs-toggle="modal" data-bs-target="#priceRangeModal">
                   </div>
+        
                   <!-- Modal for the price range slider -->
             <div class="modal fade" id="priceRangeModal" tabindex="-1" aria-labelledby="priceRangeModalLabel" aria-hidden="true">
                 <div class="modal-dialog custom-modal">
@@ -619,13 +620,13 @@
                     <div class="col-lg-6 text-start text-lg-end wow slideInRight" data-wow-delay="0.1s">
                         <ul class="nav nav-pills d-inline-flex justify-content-end mb-5">
                             <li class="nav-item me-2">
-                                <a class="btn btn-outline-primary active" data-bs-toggle="pill" href="#tab-1">Featured</a>
+                                <a class="btn btn-outline-primary {% if feature == 'featured' %} active {% endif %}" href="{{ url_for('app_view_home.home', feature='featured') }}">Featured</a>
                             </li>
                             <li class="nav-item me-2">
-                                <a class="btn btn-outline-primary" data-bs-toggle="pill" href="#tab-2">For Sell</a>
+                                <a class="btn btn-outline-primary {% if feature == 'sell' %} active {% endif %}" href="{{ url_for('app_view_home.home', feature='sell') }}">For Sell</a>
                             </li>
                             <li class="nav-item me-0">
-                                <a class="btn btn-outline-primary" data-bs-toggle="pill" href="#tab-3">For Rent</a>
+                                <a class="btn btn-outline-primary {% if feature == 'rent' %} active {% endif %}"  href="{{ url_for('app_view_home.home', feature='rent') }}">For Rent</a>
                             </li>
                         </ul>
                     </div>

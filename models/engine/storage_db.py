@@ -36,18 +36,22 @@ class DBStorage:
             Base.metadata.drop_all(self.__engine)
     
     
-    def property_objs(self, per_page, offset, property_type):
+    def property_objs(self, per_page, offset, property_type=None, listing_type=None):
         """ Returns the properties needed to be listed in one page"""
         if property_type:
             return self.__session.query(Property).filter(Property.property_type == property_type).limit(per_page).offset(offset)
+        elif listing_type:
+            return self.__session.query(Property).filter(Property.listing_type == listing_type).limit(per_page).offset(offset)
         return self.__session.query(Property).limit(per_page).offset(offset)
 
 
 
-    def count(self, classe, property_type):
+    def count(self, classe, property_type=None, listing_type=None):
         """Counts the number of rows or objects in a given table sometimes with property_type given for properties"""
         if property_type:
             return self.__session.query(classe).filter(classe.property_type == property_type).count()
+        elif listing_type:
+            return self.__session.query(classe).filter(classe.listing_type == listing_type).count()
         return self.__session.query(classe).count()
 
 

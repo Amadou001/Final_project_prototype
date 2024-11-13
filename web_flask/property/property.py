@@ -40,7 +40,7 @@ def property_list():
     total_properties = storage.count(Property, property_type)  # Assuming `count()` is defined in your storage model
     if per_page > total_properties:
         per_page = total_properties
-    
+
     total_pages = (total_properties + per_page - 1) // per_page  # Total pages required
 
 
