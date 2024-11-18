@@ -36,9 +36,12 @@ class DBStorage:
             Base.metadata.drop_all(self.__engine)
     
     
-    def property_objs(self, per_page, offset, property_type=None, listing_type=None):
+    def property_objs(self, per_page, offset, property_type=None, country=None, city=None, max_price=None, min_price=None, listing_type=None):
         """ Returns the properties needed to be listed in one page"""
+
         if property_type:
+            if country and city and max_price and min_price:
+                return self.__session.query(Property).filter(Property.property_type == property_type, Property.country == country, Property.price <= max_price, Property.price >= min_price).limit(per_page).offset(offset)
             return self.__session.query(Property).filter(Property.property_type == property_type).limit(per_page).offset(offset)
         elif listing_type:
             return self.__session.query(Property).filter(Property.listing_type == listing_type).limit(per_page).offset(offset)
@@ -46,9 +49,12 @@ class DBStorage:
 
 
 
-    def count(self, classe, property_type=None, listing_type=None):
+    def count(self, classe, property_type=None, country=None, city=None, max_price=None, min_price=None, listing_type=None):
         """Counts the number of rows or objects in a given table sometimes with property_type given for properties"""
+    
         if property_type:
+            if country and city and max_price and min_price:
+                return self.__session.query(classe).filter(classe.property_type == property_type, classe.country == country, classe.price <= max_price, classe.price >= min_price).count()
             return self.__session.query(classe).filter(classe.property_type == property_type).count()
         elif listing_type:
             return self.__session.query(classe).filter(classe.listing_type == listing_type).count()
@@ -73,6 +79,7 @@ class DBStorage:
                       "Property_image": Property_image,
                       "Message": Message
                       }
+
         obj_result = {}
         cls = cls if not isinstance(cls, str) else allclasses.get(cls)
         if cls is None:
@@ -116,7 +123,7 @@ class DBStorage:
         
         return self.__session.query(Property_image).filter(Property_image.property_id == property_id,  Property_image.image_type == image_type).first()
     
- 
+
     """ def get_countries_with_cities(self):
         #Returns a dictionary of countries with their respective cities from the Property table.
         results = self.__session.query(Property.country, Property.city).distinct().all()

@@ -28,11 +28,11 @@ def home():
 
     elif feature == "sell":
         total_objs = storage.count(Property, listing_type="sell")
-        print(total_objs)
+        #print(total_objs)
         if per_page > total_objs:
             per_page = total_objs
         property_objs = storage.property_objs(per_page, 0, listing_type="sell")
-        print(property_objs)
+        #print(property_objs)
     
     elif feature == "rent":
         total_objs = storage.count(Property, listing_type="rent")

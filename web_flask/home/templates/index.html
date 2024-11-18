@@ -475,7 +475,7 @@
                     </select>
                   </div>
                   <div class="col-sm">
-                    <select class="form-select border-0 py-3">
+                    <select class="form-select border-0 py-3" id="type_search">
                         <option selected>Property Type</option>
                         <option value="apartment">apartment</option>
                         <option value="house">house</option>
@@ -502,8 +502,8 @@
                                 <span id="maxPriceDisplay">$1000+</span>
                             </div>
                             <div class="range-slider mt-3">
-                                <input type="range" class="form-range" min="0" max="1000" step="50" id="minPrice" value="100">
-                                <input type="range" class="form-range" min="0" max="1000" step="50" id="maxPrice" value="900">
+                                <input type="range" class="form-range" min="0" max="1000000" step="50" id="minPrice" value="100">
+                                <input type="range" class="form-range" min="0" max="1000000" step="50" id="maxPrice" value="900">
                             </div>
                             <div class="text-center mt-2">
                                 <span id="selectedRange">Selected: $100 - $900</span>
@@ -517,7 +517,7 @@
                 </div>
             </div>
                   <div class="col-sm">
-                    <button class="btn btn-dark border-0 w-100 py-3">Search</button>
+                    <a href="" id="search_bric" ><button class="btn btn-dark border-0 w-100 py-3" id="search_bric_btn">Search</button></a>  
                   </div>
                 </div>
               </div>
@@ -912,6 +912,8 @@
         <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
     </div>  
 
+
+    <!-- Search -->
     <script>
         document.getElementById('country_search').addEventListener('change', async function() {
             const country = this.value;  // Get the selected country
@@ -935,6 +937,44 @@
             }
         });
         </script>
+
+        
+        <script>
+            const search_bric = document.getElementById("search_bric");
+            const search_bric_btn = document.getElementById("search_bric_btn");
+            const country_search = document.getElementById("country_search");
+            const city_search = document.getElementById("city_search");
+            const type_search = document.getElementById("type_search");
+            const maxPrice = document.getElementById("maxPrice");
+            const minPrice = document.getElementById("minPrice");
+        
+            // Function to update the link's href or disable it if criteria are not met
+            function updateSearchLink() {
+                // Get the values from each input
+                const countryValue = country_search.value;
+                const cityValue = city_search.value;
+                const typeValue = type_search.value;
+                const maxPriceValue = maxPrice.value;
+                const minPriceValue = minPrice.value;
+        
+                // Check if required fields are selected
+                if (countryValue == "Select a country" || cityValue == "Select a city" || typeValue == "Property Type") {
+                    // Disable the link by preventing the default action
+                    search_bric.removeAttribute("href");  // Remove the href attribute
+                    //search_bric.classList.add("disabled-link"); // Optionally style it as disabled
+                } else {
+                    // Set the href attribute with the updated values
+                    search_bric.setAttribute("href", `/roofmarket/property_list?type=${typeValue}&country=${countryValue}&city=${cityValue}&max_price=${maxPriceValue}&min_price=${minPriceValue}`);
+                    //search_bric.classList.remove("disabled-link"); // Remove disabled styling if previously applied
+                }
+            }
+        
+            // Add the event listener for mouseover
+            search_bric_btn.addEventListener("mouseover", updateSearchLink);
+        </script>
+        
+        <!-- Search end -->
+        
         
 
     

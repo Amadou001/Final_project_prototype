@@ -119,56 +119,64 @@
         <div class="container-fluid bg-primary mb-5 wow fadeIn" data-wow-delay="0.1s" style="padding: 35px;">
             <div class="container">
                 <div class="row">
-                  <div class="col-sm">
-                    <input type="text" class="form-control border-0 py-3" id="size" placeholder="Country">
-                  </div>
-                  <div class="col-sm">
-                    <input type="text" class="form-control border-0 py-3" placeholder="City">
-                  </div>
-                  <div class="col-sm">
-                    <select class="form-select border-0 py-3">
-                        <option selected>Property Type</option>
-                        <option value="1">apartment</option>
-                        <option value="2">house</option>
-                        <option value="3">studio</option>
-                        <option value="4">villa</option>
-                    </select>
-                  </div>
-                  <div class="col-sm">
-                    <input type="text" class="form-control border-0 py-3" placeholder="Price Range" id="priceRangeInput" readonly data-bs-toggle="modal" data-bs-target="#priceRangeModal">
-                  </div>
-                  <!-- Modal for the price range slider -->
-            <div class="modal fade" id="priceRangeModal" tabindex="-1" aria-labelledby="priceRangeModalLabel" aria-hidden="true">
-                <div class="modal-dialog custom-modal">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="priceRangeModalLabel">Select Price Range</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <label for="priceRange" class="form-label">Price Range:</label>
-                            <div class="d-flex justify-content-between">
-                                <span id="minPriceDisplay">$0</span>
-                                <span id="maxPriceDisplay">$1000+</span>
+                    <div class="col-sm">
+                        <select class="form-select border-0 py-3" id="country_search">
+                            <option selected disabled>Select a country</option>
+                            {% for country in countries %}
+                            <option value="{{ country }}">{{ country }}</option>
+                            {% endfor %}
+                        </select>
+                      </div>
+                      <div class="col-sm">
+                        <select class="form-select border-0 py-3" id="city_search">
+                            <option selected disabled>Select a city</option>
+                        </select>
+                      </div>
+                      <div class="col-sm">
+                        <select class="form-select border-0 py-3" id="type_search">
+                            <option selected>Property Type</option>
+                            <option value="apartment">apartment</option>
+                            <option value="house">house</option>
+                            <option value="studio">studio</option>
+                            <option value="villa">villa</option>
+                        </select>
+                      </div>
+                      <div class="col-sm">
+                        <input type="text" class="form-control border-0 py-3" placeholder="Price Range" id="priceRangeInput" readonly data-bs-toggle="modal" data-bs-target="#priceRangeModal">
+                      </div>
+            
+                      <!-- Modal for the price range slider -->
+                <div class="modal fade" id="priceRangeModal" tabindex="-1" aria-labelledby="priceRangeModalLabel" aria-hidden="true">
+                    <div class="modal-dialog custom-modal">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="priceRangeModalLabel">Select Price Range</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
-                            <div class="range-slider mt-3">
-                                <input type="range" class="form-range" min="0" max="1000" step="50" id="minPrice" value="100">
-                                <input type="range" class="form-range" min="0" max="1000" step="50" id="maxPrice" value="900">
+                            <div class="modal-body">
+                                <label for="priceRange" class="form-label">Price Range:</label>
+                                <div class="d-flex justify-content-between">
+                                    <span id="minPriceDisplay">$0</span>
+                                    <span id="maxPriceDisplay">$1000+</span>
+                                </div>
+                                <div class="range-slider mt-3">
+                                    <input type="range" class="form-range" min="0" max="1000000" step="50" id="minPrice" value="100">
+                                    <input type="range" class="form-range" min="0" max="1000000" step="50" id="maxPrice" value="900">
+                                </div>
+                                <div class="text-center mt-2">
+                                    <span id="selectedRange">Selected: $100 - $900</span>
+                                </div>
                             </div>
-                            <div class="text-center mt-2">
-                                <span id="selectedRange">Selected: $100 - $900</span>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" id="applyPriceRange" data-bs-dismiss="modal">Apply</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                             </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" id="applyPriceRange" data-bs-dismiss="modal">Apply</button>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         </div>
                     </div>
                 </div>
-            </div>
-                  <div class="col-sm">
-                    <button class="btn btn-dark border-0 w-100 py-3">Search</button>
-                  </div>
+                      <div class="col-sm">
+                        <a href="" id="search_bric" ><button class="btn btn-dark border-0 w-100 py-3" id="search_bric_btn">Search</button></a>  
+                      </div>
                 </div>
               </div>
         </div>
@@ -219,6 +227,10 @@
             const totalPages = {{ total_pages }};  // Ensure total_pages is correctly passed
             const per_page = {{ per_page }};
             {% if property_type %} const property_type = "{{ property_type }}"; {% else %} const property_type = 'None'; {% endif%}
+            {% if country %} const country = "{{ country }}"; {% else %} const country = 'None'; {% endif%}
+            {% if city %} const city= "{{ city }}"; {% else %} const city = 'None'; {% endif%}
+            {% if max_price %} const max_price = "{{ max_price }}"; {% else %} const max_price = 'None'; {% endif%}
+            {% if min_price %} const min_price = "{{ min_price }}"; {% else %} const min_price = 'None'; {% endif%}
 
             const propertiesContainer = document.getElementById('properties-container');
             let wowDelay = 0.2;  // Starting value for data-wow-delay
@@ -227,7 +239,7 @@
                 if (page > totalPages) return;  // Stop if no more pages
         
                 try {
-                    const response = await fetch(`/roofmarket/page_generation?page=${page}&property_type=${property_type}&per_page=${per_page}`);
+                    const response = await fetch(`/roofmarket/page_generation?page=${page}&property_type=${property_type}&per_page=${per_page}&country=${country}&city=${city}&max_price=${max_price}&min_price=${min_price}`);
                     const data = await response.json();
         
                     data.properties.forEach(property => {
@@ -361,6 +373,67 @@
             </div>
         </div>
         <!-- Footer End -->
+
+
+        <!-- Search -->
+    <script>
+        document.getElementById('country_search').addEventListener('change', async function() {
+            const country = this.value;  // Get the selected country
+            const citySelect = document.getElementById('city_search');
+            
+            // Clear previous cities
+            citySelect.innerHTML = '<option selected disabled>Select a city</option>';
+        
+            if (country) {
+                // Fetch cities based on the selected country
+                const response = await fetch(`/roofmarket/get_cities/${country}`);
+                const cities = await response.json();
+        
+                // Populate the city dropdown with the retrieved cities
+                cities.forEach(city => {
+                    const option = document.createElement('option');
+                    option.value = city;
+                    option.textContent = city;
+                    citySelect.appendChild(option);
+                });
+            }
+        });
+        </script>
+
+        
+        <script>
+            const search_bric = document.getElementById("search_bric");
+            const search_bric_btn = document.getElementById("search_bric_btn");
+            const country_search = document.getElementById("country_search");
+            const city_search = document.getElementById("city_search");
+            const type_search = document.getElementById("type_search");
+            const maxPrice = document.getElementById("maxPrice");
+            const minPrice = document.getElementById("minPrice");
+        
+            // Function to update the link's href or disable it if criteria are not met
+            function updateSearchLink() {
+                // Get the values from each input
+                const countryValue = country_search.value;
+                const cityValue = city_search.value;
+                const typeValue = type_search.value;
+                const maxPriceValue = maxPrice.value;
+                const minPriceValue = minPrice.value;
+        
+                // Check if required fields are selected
+                if (countryValue == "Select a country" || cityValue == "Select a city" || typeValue == "Property Type") {
+                    // Disable the link by preventing the default action
+                    search_bric.removeAttribute("href");  // Remove the href attribute
+                    //search_bric.classList.add("disabled-link"); // Optionally style it as disabled
+                } else {
+                    // Set the href attribute with the updated values
+                    search_bric.setAttribute("href", `/roofmarket/property_list?type=${typeValue}&country=${countryValue}&city=${cityValue}&max_price=${maxPriceValue}&min_price=${minPriceValue}`);
+                    //search_bric.classList.remove("disabled-link"); // Remove disabled styling if previously applied
+                }
+            }
+        
+            // Add the event listener for mouseover
+            search_bric_btn.addEventListener("mouseover", updateSearchLink);
+        </script>
 
 
         <!-- Back to Top -->

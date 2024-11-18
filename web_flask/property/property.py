@@ -35,16 +35,35 @@ def property_list():
     property_type = request.args.get('type', None)
     if property_type not in ["apartment", "studio", "house", "villa"]:
         property_type = None
+    country = request.args.get('country', None)
+    city = request.args.get('city', None)
+    max_price = request.args.get('max_price', None)
+    min_price = request.args.get('min_price', None)
+    total_properties = 0
+    print(property_type)
+    print(country)
+    print(city)
+    print(max_price)
+    print(min_price)
+    if country and city and property_type and max_price and min_price:
+        # Get the total number of properties
+        print(property_type)
+        total_properties = storage.count(Property, property_type, country, city, max_price, min_price)
+        print(total_properties)
 
-    # Get the total number of properties
-    total_properties = storage.count(Property, property_type)  # Assuming `count()` is defined in your storage model
+    else:
+        # Get the total number of properties
+        total_properties = storage.count(Property, property_type) 
     if per_page > total_properties:
         per_page = total_properties
+    
+    total_pages = 0
+    if per_page != 0:
+        total_pages = (total_properties + per_page - 1) // per_page  # Total pages required
 
-    total_pages = (total_properties + per_page - 1) // per_page  # Total pages required
+    countries = storage.get_countries()
 
-
-    return render_template('property_listing.html', total_pages=total_pages, property_type=property_type, per_page=per_page)
+    return render_template('property_listing.html', countries=countries, total_pages=total_pages, property_type=property_type, per_page=per_page, country=country, city=city, max_price=max_price, min_price=min_price)
   
 
 @app_views_property.route("/page_generation")
@@ -53,12 +72,23 @@ def page_generation():
     page = int(request.args.get('page', 1))  # Get current page from query parameters
     offset = (page - 1) * per_page
     property_type = request.args.get('property_type', None)
-
+    country = request.args.get('country', None)
+    city = request.args.get('city', None)
+    max_price = request.args.get('max_price', None)
+    min_price = request.args.get('min_price', None)
+    if country == 'None':
+        country = None
+    if city == 'None':
+        city = None
+    if max_price == 'None':
+        max_price = None
+    if min_price == 'None':
+        min_price = None
     if property_type not in ["apartment", "studio", "house", "villa"] or property_type == 'None':
         property_type = None
 
     # Query properties with limit and offset
-    property_objs = storage.property_objs(per_page, offset, property_type)
+    property_objs = storage.property_objs(per_page, offset, property_type, country, city, max_price, min_price)
 
     property_list = []
     for obj in property_objs:
