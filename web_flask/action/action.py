@@ -4,7 +4,7 @@
 
 from action import app_views_action
 
-from flask import render_template, url_for, jsonify, request, redirect
+from flask import render_template, url_for, request, redirect
 import os
 from werkzeug.utils import secure_filename
 from flask import current_app
@@ -89,3 +89,9 @@ def upload_property():
     # Example response
     """return jsonify(property_data)"""
     return redirect(url_for('app_view_home.home'))
+
+
+
+@app_views_action.route('/my_properties')
+def my_properties():
+    return render_template('my_properties.html')

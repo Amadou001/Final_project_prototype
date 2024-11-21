@@ -40,11 +40,6 @@ def property_list():
     max_price = request.args.get('max_price', None)
     min_price = request.args.get('min_price', None)
     total_properties = 0
-    print(property_type)
-    print(country)
-    print(city)
-    print(max_price)
-    print(min_price)
     if country and city and property_type and max_price and min_price:
         # Get the total number of properties
         print(property_type)

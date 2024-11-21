@@ -14,7 +14,7 @@ from models.property_image import Property_image
 @app_views_home.route("/")
 def home():
 
-    per_page = 10
+    per_page = 9
     property_objs = []
     feature = request.args.get('feature', None)
     if feature not in ['featured', 'sell', 'rent']:
